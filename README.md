@@ -40,10 +40,11 @@ The data is transmitted as a stream of bytes.  There is no
 The file is transmitted as a series of data blocks preceded by
          one or more header bytes.<br>
          
-## 2. The C/S model of MiniFTP server.
+### 1.5 The C/S model of MiniFTP server.
 
 ![image](https://github.com/qinchao0525/MiniFTP/blob/master/pictures/C_S.jpg)
 
 <br>Note:C/S model <br>
+## 2. Project Requirements
 
 
