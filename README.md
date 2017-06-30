@@ -45,6 +45,11 @@ The file is transmitted as a series of data blocks preceded by
 ![image](https://github.com/qinchao0525/MiniFTP/blob/master/pictures/C_S.jpg)
 
 <br>Note:C/S model <br>
+### 1.6 working model
+* active model<br>
+client->server
+* passive model<br>
+server->client
 ## 2. Project Requirements
 
 
