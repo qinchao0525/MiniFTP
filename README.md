@@ -45,6 +45,19 @@ The file is transmitted as a series of data blocks preceded by
 ![image](https://github.com/qinchao0525/MiniFTP/blob/master/pictures/C_S.jpg)
 
 <br>Note:C/S model <br>
+### 1.6 working model
+* active model<br>
+client->server
+* passive model<br>
+server->client
 ## 2. Project Requirements
+### 2.1 command
+### 2.2 configure
+### 2.3 leisure disconnect
+### 2.4 rate limit
+### 2.5 limit connect
+### 2.6 breakpoint reconnect
+## 3. system struct
+### 3.1 sys logic struct
 
 
