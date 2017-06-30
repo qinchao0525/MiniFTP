@@ -51,5 +51,13 @@ client->server
 * passive model<br>
 server->client
 ## 2. Project Requirements
+### 2.1 command
+### 2.2 configure
+### 2.3 leisure disconnect
+### 2.4 rate limit
+### 2.5 limit connect
+### 2.6 breakpoint reconnect
+## 3. system struct
+### 3.1 sys logic struct
 
 
