@@ -1,7 +1,7 @@
 .PHONY:clean
 CC=gcc
 CFLAGS=-Wall -g
-BIN=
+BIN=main
 OBJS=
 $(BIN):$(OBJS)
 	$(CC) $(CFLAGS) $^ -o $@
