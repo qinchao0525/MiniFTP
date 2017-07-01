@@ -1,6 +1,7 @@
 #ifndef _SYS_UTIL_H
 #define _SYS_UTIL_H
 
+
 int getlocalip(char *ip);
 
 void activate_nonblock(int fd);
