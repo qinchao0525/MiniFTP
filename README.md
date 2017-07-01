@@ -59,5 +59,5 @@ server->client
 ### 2.6 breakpoint reconnect
 ## 3. system struct
 ### 3.1 sys logic struct
-
+![image](https://github.com/qinchao0525/MiniFTP/blob/master/pictures/sysstruct.jpg)
 
