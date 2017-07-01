@@ -42,9 +42,9 @@ The file is transmitted as a series of data blocks preceded by
          
 ### 1.5 The C/S model of MiniFTP server.
 
-![image](https://github.com/qinchao0525/MiniFTP/blob/master/pictures/C_S.jpg)
+ ![image](https://github.com/qinchao0525/MiniFTP/blob/master/pictures/C_S.jpg) 
 
-<br>Note:C/S model <br>
+<br>P1. C/S model <br>
 ### 1.6 working model
 * active model<br>
 client->server
@@ -60,4 +60,8 @@ server->client
 ## 3. system struct
 ### 3.1 sys logic struct
 ![image](https://github.com/qinchao0525/MiniFTP/blob/master/pictures/sysstruct.jpg)
-
+<br>P2. The system struct.<br>
+### 3.1 submodel
+This is the summodel, we implement the function int the model.<br>
+![submodel](https://github.com/qinchao0525/MiniFTP/blob/master/pictures/submodel.jpg)
+<br>P3. summodel</br>
