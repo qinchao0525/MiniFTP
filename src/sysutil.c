@@ -1,5 +1,17 @@
 #include "sysutil.h"
 
+int getlocalip(char *ip)
+{
+	char host[100]={0};
+	if( gethostname(host, sizeof(host))<0 )
+		return -1;
+	struct hostent *hp;
+	if( (hp=gethostbyname(host))==NULL )
+		return -1;
+
+	strcpy(ip, inet_ntoa(*(struct in_addr*)hp->h_addr));
+	return 0;
+}
 
 ssize_t readn(int fd, void*buf, size_t count)
 {
@@ -42,7 +54,7 @@ ssize_t writen(int fd, const void*buf, size_t count)
 			continue;
 		bufp += nwritten;
 
-		nleft -= nread;
+		nleft -= nwritten;
 	}
 	return count;
 }
@@ -150,6 +162,7 @@ int write_timeout(int fd, unsigned int wait_seconds)
 		else if(ret==1)
 		{
 			ret=0;
+		}
 	}
 	return ret;
 }
@@ -205,14 +218,14 @@ void activate_nonblock(int fd)
 		ERR_EXIT("fcntl");
 }
 
-void deactivate_noblock(int fd)
+void deactivate_nonblock(int fd)
 {
 	int ret;
 	int flags=fcntl(fd, F_GETFL);
 	if(flags==-1)
 		ERR_EXIT("fcntl");
 
-	flags |= ~O_NONBLOCK;
+	flags &= ~O_NONBLOCK;
 	ret = fcntl(fd, F_SETFL, flags);
 	if(ret==-1)
 		ERR_EXIT("fcntl");
@@ -226,7 +239,7 @@ int connect_timeout(int fd, struct sockaddr_in *addr, unsigned int wait_seconds)
 	if(wait_seconds > 0)
 		activate_nonblock(fd);
 
-	ret=connect(fd, (struct sockaddr *)addr, )
+	ret=connect(fd, (struct sockaddr *)addr, addrlen);
 	if(ret<0 && errno==EINPROGRESS)
 	{
 		fd_set connect_fdset;
@@ -264,7 +277,7 @@ int connect_timeout(int fd, struct sockaddr_in *addr, unsigned int wait_seconds)
 			}
 		}
 	}
-	if(wait_secons > 0)
+	if(wait_seconds > 0)
 		deactivate_nonblock(fd);
 	return ret;
 }
