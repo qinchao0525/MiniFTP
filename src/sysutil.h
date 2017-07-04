@@ -1,6 +1,7 @@
 #ifndef _SYS_UTIL_H
 #define _SYS_UTIL_H
 
+#include "common.h"
 
 int getlocalip(char *ip);
 
