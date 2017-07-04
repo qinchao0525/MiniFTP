@@ -1,8 +1,8 @@
 .PHONY:clean
 CC=gcc
 CFLAGS=-Wall -g
-BIN=main
-OBJS=
+BIN=miniftpd
+OBJS=main.o sysutil.o 
 $(BIN):$(OBJS)
 	$(CC) $(CFLAGS) $^ -o $@
 %.o:%.c
