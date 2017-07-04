@@ -281,3 +281,11 @@ int connect_timeout(int fd, struct sockaddr_in *addr, unsigned int wait_seconds)
 		deactivate_nonblock(fd);
 	return ret;
 }
+
+void send_fd(int sock_fd, int fd)
+{
+}
+
+void recv_fd(const int sock_fd)
+{
+}
