@@ -23,6 +23,20 @@ ssize_t recv_peek(int sockfd, void* buf, size_t len);
 void send_fd(int sock_fd, int fd);
 void recv_fd(const int sock_fd);
 
+int getlocalip(char *ip)
+{
+	char host[100]={0};
+	if( gethostname(host, sizeof(host))<0 )
+		return -1;
+	struct hostent *hp;
+	if( (hp=gethostbyname(host))==NULL )
+		return -1;
+
+	strcpy(ip, inet_ntoa(*(struct in_addr*)hp->h_addr));
+	return 0;
+}
+
+
 ssize_t readn(int fd, void*buf, size_t count)
 {
 	size_t nleft = count;
@@ -288,3 +302,6 @@ int connect_timeout(int fd, struct sockaddr_in *addr, unsigned int wait_seconds)
 		deactivate_nonblock(fd);
 	return ret;
 }
+
+
+
