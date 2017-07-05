@@ -1,5 +1,47 @@
 #include "sysutil.h"
 
+//start tcp server.
+int tcp_server(const char* host, unsigned short port)
+{
+	int listenfd;
+	if( (listenfd=socket(PF_INET, SOCK_STREAM, 0)) < 0 )
+	{
+		ERR_EXIT("tcp_server");
+	}
+	
+	struct sockaddr_in servaddr;
+	memset(&servaddr, 0, sizeof(servaddr));
+	servaddr.sin_family = AF_INET;
+	if(host!=NULL)
+	{
+		if( (inet_aton(host, &servaddr.sin_addr))==0 )
+		{
+			struct hostent *hp;
+			hp=gethostbyname(host);
+			if(hp==NULL)
+				ERR_EXIT("gethostbyname");
+			servaddr.sin_addr=*(struct in_addr *)hp->h_addr;
+
+		}
+	}
+	else
+		servaddr.sin_addr.s_addr=htonl(INADDR_ANY);
+
+	servaddr.sin_port = htons(port);
+
+	int on=1;
+	if( setsockopt(listenfd, SOL_SOCKET, SO_REUSEADDR, (const char*)&on, sizeof(on)) < 0)
+	{	
+		ERR_EXIT("gethostbyname");
+	}
+	if( (bind(listenfd, (struct sockaddr*)&servaddr, sizeof(servaddr)))<0 )
+		ERR_EXIT("Bind");
+	if( (listen(listenfd, SOMAXCONN))<0 )
+		ERR_EXIT("Listen");
+
+	return listenfd;
+}
+
 int getlocalip(char *ip)
 {
 	char host[100]={0};
@@ -284,8 +326,68 @@ int connect_timeout(int fd, struct sockaddr_in *addr, unsigned int wait_seconds)
 
 void send_fd(int sock_fd, int fd)
 {
+	int ret;
+	struct msghdr msg;
+	struct cmsghdr *p_cmsg;
+	struct iovec vec;
+	char cmsgbuf[CMSG_SPACE(sizeof(fd))];
+	int  *p_fds;
+	char sendchar = 0;
+	msg.msg_control=cmsgbuf;
+	msg.msg_controllen=sizeof(cmsgbuf);
+	p_cmsg=CMSG_FIRSTHDR(&msg);
+	p_cmsg->cmsg_level=SOL_SOCKET;
+	p_cmsg->cmsg_type=SCM_RIGHTS;
+	p_cmsg->cmsg_len=CMSG_LEN(sizeof(fd));
+	p_fds=(int *)CMSG_DATA(p_cmsg);
+	*p_fds=fd;
+
+	msg.msg_name=NULL;
+	msg.msg_namelen=0;
+	msg.msg_iov=&vec;
+	msg.msg_iovlen=1;
+	msg.msg_flags=0;
+
+	vec.iov_base = &sendchar;
+	vec.iov_len=sizeof(sendchar);
+	ret = sendmsg(sock_fd, &msg, 0);
+	if(ret!=1)
+		ERR_EXIT("sendmsg");
 }
 
-void recv_fd(const int sock_fd)
+int recv_fd(const int sock_fd)
 {
+	int ret;
+	struct msghdr msg;
+	char recvchar;
+	struct iovec vec;
+	int recv_fd;
+	char cmsgbuf[CMSG_SPACE(sizeof(recv_fd))];
+	struct cmsghdr *p_cmsg;
+	int *p_fd;
+	vec.iov_base=&recvchar;
+	vec.iov_len=sizeof(recvchar);
+	msg.msg_name=NULL;
+	msg.msg_namelen=0;
+	msg.msg_iov=&vec;
+	msg.msg_iovlen=1;
+	msg.msg_control=cmsgbuf;
+	msg.msg_controllen=sizeof(cmsgbuf);
+	msg.msg_flags=0;
+
+	p_fd=(int *)CMSG_DATA(CMSG_FIRSTHDR(&msg));
+	*p_fd=-1;
+	ret=recvmsg(sock_fd, &msg, 0);
+	if(ret==-1)
+		ERR_EXIT("recvmsg");
+
+	p_cmsg=CMSG_FIRSTHDR(&msg);
+	if (p_cmsg==NULL)
+		ERR_EXIT("no passed fd");
+
+	p_fd=(int*)CMSG_DATA(p_cmsg);
+	recv_fd=*p_fd;
+	if(recv_fd==-1)
+		ERR_EXIT("no passed fd");	
+	return recv_fd;
 }
