@@ -71,5 +71,5 @@ This is the summodel, we implement the function int the model.<br>
 ## 1.Frame of sysmodel
 ![image](https://github.com/qinchao0525/MiniFTP/blob/master/pictures/2016112162409439.jpg)
 ## 2.Flow chart for C++ programming.
-![image](https://github.com/qinchao0525/MiniFTP/blob/master/pictures/2016112162442621.jpg)<bt>
+![image](https://github.com/qinchao0525/MiniFTP/blob/master/pictures/2016112162442621.jpg)<br>
 `NOTE:` reference from http://www.jb51.net/article/96337.htm
