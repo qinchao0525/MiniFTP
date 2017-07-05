@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include "common.h"
+#include "sysutil.h"
+#include "session.h"
 
 #define ERR_EXIT(m)\
         do\
