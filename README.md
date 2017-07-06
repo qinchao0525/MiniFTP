@@ -77,3 +77,6 @@ This is the summodel, we implement the function int the model.<br>
   Connecting with TCP protocol. Server and client will create a socket by themselves. Server<br>
 will wait for connection requirement and decide which client requirement will be accept. Connection<br>
 will be made when server and client has suited port and both are free.<br>
+  Server will continue to wait for connection when client require to break the link, but server only <br>
+use the way that one client with one server with out multi-process.
+## 4.Data format
