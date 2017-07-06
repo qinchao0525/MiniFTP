@@ -73,3 +73,7 @@ This is the summodel, we implement the function int the model.<br>
 ## 2.Flow chart for C++ programming.
 ![image](https://github.com/qinchao0525/MiniFTP/blob/master/pictures/2016112162442621.jpg)<br>
 `NOTE:` reference from http://www.jb51.net/article/96337.htm
+## 3.Connection
+  Connecting with TCP protocol. Server and client will create a socket by themselves. Server<br>
+will wait for connection requirement and decide which client requirement will be accept. Connection<br>
+will be made when server and client has suited port and both are free.<br>
