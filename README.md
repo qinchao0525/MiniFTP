@@ -61,6 +61,9 @@ server->client
 ### 3.1 sys logic struct
 ![image](https://github.com/qinchao0525/MiniFTP/blob/master/pictures/sysstruct.jpg)
 <br>P2. The system struct.<br>
+In this model, new subprocess will be created when a client requirement is recevied.<br>
+Every single c/s connection has two sub process, one is for sevice and another is for<br>
+command between service and client processing.
 ### 3.1 submodel
 This is the summodel, we implement the function int the model.<br>
 ![submodel](https://github.com/qinchao0525/MiniFTP/blob/master/pictures/submodel.jpg)
