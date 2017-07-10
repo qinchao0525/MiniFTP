@@ -6,4 +6,6 @@ Connecting with TCP protocol. Sever and client will create a socket by themselve
 <br>
 Server will continue to wait for connection when client require to break the link,<br> but server only use the  way that one client with one server with out multi-process<br>
 ## 3.PDU<br>
+In this project, we use binary file for transfer. For the limit of buffer, we can<br> not transfer all file once in the socket. The package will be cut into small pices<br> 
+In the transfer process, we need one signal to tell us when to stop. This is the <br> signal measure.<br>
 
