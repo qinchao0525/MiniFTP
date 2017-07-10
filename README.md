@@ -1,5 +1,5 @@
 # MiniFTP
-
+Declarationg:`This project just for learning network programming and first use of open source.`
 ## 1. Function and Introduction:
 My blog: http://blog.csdn.net/qq_36196684<br>
 <br>
@@ -61,7 +61,25 @@ server->client
 ### 3.1 sys logic struct
 ![image](https://github.com/qinchao0525/MiniFTP/blob/master/pictures/sysstruct.jpg)
 <br>P2. The system struct.<br>
+In this model, new subprocess will be created when a client requirement is recevied.<br>
+Every single c/s connection has two sub process, one is for sevice and another is for<br>
+command between service and client processing.
 ### 3.1 submodel
 This is the summodel, we implement the function int the model.<br>
 ![submodel](https://github.com/qinchao0525/MiniFTP/blob/master/pictures/submodel.jpg)
 <br>P3. summodel</br>
+
+
+# MiniFTP Written with C++
+## 1.Frame of sysmodel
+![image](https://github.com/qinchao0525/MiniFTP/blob/master/pictures/2016112162409439.jpg)
+## 2.Flow chart for C++ programming.
+![image](https://github.com/qinchao0525/MiniFTP/blob/master/pictures/2016112162442621.jpg)<br>
+`NOTE:` reference from http://www.jb51.net/article/96337.htm
+## 3.Connection
+  Connecting with TCP protocol. Server and client will create a socket by themselves. Server<br>
+will wait for connection requirement and decide which client requirement will be accept. Connection<br>
+will be made when server and client has suited port and both are free.<br>
+  Server will continue to wait for connection when client require to break the link, but server only <br>
+use the way that one client with one server with out multi-process.
+## 4.Data format
