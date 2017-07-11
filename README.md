@@ -44,7 +44,7 @@ The file is transmitted as a series of data blocks preceded by
 
  ![image](https://github.com/qinchao0525/MiniFTP/blob/master/pictures/C_S.jpg) 
 
-<br>P1. C/S model <br>
+<br>P1. FTP basic struct model <br>
 ### 1.6 working model
 * active model<br>
 client->server
@@ -71,6 +71,7 @@ This is the summodel, we implement the function int the model.<br>
 
 
 # MiniFTP Written with C++
+Implement in Linux.
 ## 1.Frame of sysmodel
 ![image](https://github.com/qinchao0525/MiniFTP/blob/master/pictures/2016112162409439.jpg)
 ## 2.Flow chart for C++ programming.
