@@ -40,7 +40,7 @@ The data is transmitted as a stream of bytes.  There is no
 The file is transmitted as a series of data blocks preceded by
          one or more header bytes.<br>
          
-### 1.5 The C/S model of MiniFTP server.
+### 1.5 The basic FTP model
 
  ![image](https://github.com/qinchao0525/MiniFTP/blob/master/pictures/C_S.jpg) 
 
@@ -71,7 +71,7 @@ This is the summodel, we implement the function int the model.<br>
 
 
 # MiniFTP Written with C++
-Implement in Linux.
+Implement in windos with c++.
 ## 1.Frame of sysmodel
 ![image](https://github.com/qinchao0525/MiniFTP/blob/master/pictures/2016112162409439.jpg)
 ## 2.Flow chart for C++ programming.
