@@ -1,5 +1,5 @@
 # MiniFTP
-Declarationg:`This project just for learning network programming and first use of open source.`
+Declaration:`This project just for learning network programming and first use of open source.`
 ## 1. Function and Introduction:
 My blog: http://blog.csdn.net/qq_36196684<br>
 <br>
