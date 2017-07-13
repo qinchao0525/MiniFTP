@@ -17,6 +17,7 @@ int main()
 		fprintf(stderr, "miniftpd:must be started as root\n");
 		exit(EXIT_FAILURE);
 	}
+	session_t sess={-1, "","","", -1, -1};
 	
 	int listenfd=tcp_server(NULL, 5188);
 	int conn;
@@ -34,7 +35,8 @@ int main()
 		if(pid==0)
 		{
 			close(listenfd);
-			begin_session(conn);
+			sess.ctrl_fd=conn;
+			begin_session(&sess);
 		}
 		else
 			close(conn);

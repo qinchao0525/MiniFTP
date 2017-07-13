@@ -9,6 +9,7 @@
 #include <netinet/in.h>
 #include <fcntl.h>
 #include <arpa/inet.h>
+#include <pwd.h>
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -20,5 +21,9 @@
 	    perror(m);\
             exit(EXIT_FAILURE);\
         }while(0)
+
+#define MAX_COMMAND_LINE 1024
+#define MAX_COMMAND 32
+#define MAX_ARG 1024
 
 #endif

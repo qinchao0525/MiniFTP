@@ -1,5 +1,5 @@
 # MiniFTP
-Declarationg:`This project just for learning network programming and first use of open source.`
+Declaration:`This project just for learning network programming and first use of open source.`
 ## 1. Function and Introduction:
 My blog: http://blog.csdn.net/qq_36196684<br>
 <br>
@@ -40,11 +40,11 @@ The data is transmitted as a stream of bytes.  There is no
 The file is transmitted as a series of data blocks preceded by
          one or more header bytes.<br>
          
-### 1.5 The C/S model of MiniFTP server.
+### 1.5 The basic FTP model
 
  ![image](https://github.com/qinchao0525/MiniFTP/blob/master/pictures/C_S.jpg) 
 
-<br>P1. C/S model <br>
+<br>P1. FTP basic struct model <br>
 ### 1.6 working model
 * active model<br>
 client->server
@@ -71,6 +71,7 @@ This is the summodel, we implement the function int the model.<br>
 
 
 # MiniFTP Written with C++
+Implement in windos with c++.
 ## 1.Frame of sysmodel
 ![image](https://github.com/qinchao0525/MiniFTP/blob/master/pictures/2016112162409439.jpg)
 ## 2.Flow chart for C++ programming.
