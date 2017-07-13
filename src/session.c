@@ -1,8 +1,23 @@
 #include "common.h"
 #include "session.h"
+#include "ftpproto.h"
+#include "privparent.h"
+#include <pwd.h>
 
 void begin_session(session_t *sess)
 {
+	struct passwd *pw=getpwnam("nobody");	
+	if(pw==NULL)
+		return;
+	if( setegid(pw->pw_gid)<0 )
+	{
+		ERR_EXIT("setegid");
+	}
+	if( seteuid(pw->pw_uid)<0 )
+	{
+		ERR_EXIT("seteuid");
+	}
+
 	int sockfds[2];
 	if(socketpair(PF_UNIX, SOCK_STREAM, 0, sockfds)<0)
 		ERR_EXIT("socketpair");
@@ -21,6 +36,7 @@ void begin_session(session_t *sess)
 	}
 	else//nobody process
 	{
+		
 		close(sockfds[1]);
 		sess->parent_fd=sockfds[0];
 		handle_parent(sess);
