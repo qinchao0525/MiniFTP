@@ -71,7 +71,7 @@ This is the summodel, we implement the function int the model.<br>
 
 
 # MiniFTP Written with C++
-Implement in windos with c++.
+Implement in windows with c++.
 ## 1.Frame of sysmodel
 ![image](https://github.com/qinchao0525/MiniFTP/blob/master/pictures/2016112162409439.jpg)
 ## 2.Flow chart for C++ programming.
