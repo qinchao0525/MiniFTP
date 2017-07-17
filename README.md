@@ -14,7 +14,7 @@ FTP have four file type:<br>
   Formed by ASCII chars. Each char have 7bit, and high bit is 0.<br>
 *  `EBCDIC file`: <br>
 *  `Image file`: binary file<br>
-  High bit is o/1.<br>
+  High bit is 0/1.<br>
 *  `Local file`:<br>
 
 windows:\r\n Linux:\n mac:\r<br>
