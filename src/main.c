@@ -4,6 +4,7 @@
 #include "session.h"
 #include "str.h"
 #include "parseconf.h"
+#include "tunable.h"
 
 #define ERR_EXIT(m)\
         do\
@@ -14,7 +15,10 @@
 
 int main()
 {
-	parseconf_load_file("miniftpd.conf");
+	parseconf_load_file(MINIFTP_CONF);
+	printf("tunable_listen_port=%d\n", tunable_pasv_enable);
+	
+
 	if( getuid() != 0 )//root?
 	{
 		fprintf(stderr, "miniftpd:must be started as root\n");
