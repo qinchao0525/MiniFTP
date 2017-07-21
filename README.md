@@ -7,7 +7,7 @@ Implement of MiniFTP server.<br>
 ### 1.1 Introduction
 FTP(File Transfer Protocal), working in appliction-layer of TCP/IP whose transfer-layer is using TCP.<br>
 FTP is based on C/S model.<br>
-see more:https://www.ietf.org/rfc/rfc959.txt
+see more about ftp protocol:https://www.ietf.org/rfc/rfc959.txt
 ### 1.2 File Type
 FTP have four file type:<br>
 *  `ASCII file`: basic file of FTP<br>
@@ -17,12 +17,13 @@ FTP have four file type:<br>
   High bit is 0/1.<br>
 *  `Local file`:<br>
 
-windows:\r\n Linux:\n mac:\r<br>
-Transfer with `ASCII`:<br>
-windows->linux: \r\n->\n<br>
-linux->windows: \n->\r\n<br>
-Transfer with `Binary`:<br>
-Without any change, keeping.<br>
+differece between ASCII file and Binary file:<br>
+`windows:\r\n Linux:\n mac:\r`<br>
+* Transfer with `ASCII`:<br>
+    windows->linux: \r\n->\n<br>
+    linux->windows: \n->\r\n<br>
+* Transfer with `Binary`:<br>
+    Without any change, keeping.<br>
 
 ### 1.3 File struct
 * File struct:                  
