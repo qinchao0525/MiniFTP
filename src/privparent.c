@@ -5,7 +5,9 @@ void handle_parent(session_t *sess)
 	char cmd;
 	while(1)
 	{
+		//child-parent connection
 		read(sess->parent_fd, &cmd,1);
-		//inner command and process
+		//parsing inner command and process
+		//processing command
 	}
 }
