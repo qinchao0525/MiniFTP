@@ -2,6 +2,7 @@
 #include "common.h"
 #include "sysutil.h"
 #include "session.h"
+#include "str.h"
 
 #define ERR_EXIT(m)\
         do\
