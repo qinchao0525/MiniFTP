@@ -3,6 +3,7 @@
 #include "sysutil.h"
 #include "session.h"
 #include "str.h"
+#include "parseconf.h"
 
 #define ERR_EXIT(m)\
         do\
@@ -13,6 +14,7 @@
 
 int main()
 {
+	parseconf_load_file("miniftpd.conf");
 	if( getuid() != 0 )//root?
 	{
 		fprintf(stderr, "miniftpd:must be started as root\n");
