@@ -80,7 +80,7 @@ unsigned int str_octal_to_uint(const char *str)
 			seen_non_zero=1;
 		if(seen_non_zero)
 		{
-			result << 3;
+			result *= 8;
 			result += (digit-'0');
 		}
 		str++;
