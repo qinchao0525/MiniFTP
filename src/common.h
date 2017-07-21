@@ -10,6 +10,7 @@
 #include <fcntl.h>
 #include <arpa/inet.h>
 #include <pwd.h>
+#include <ctype.h>
 
 #include <stdio.h>
 #include <stdlib.h>
