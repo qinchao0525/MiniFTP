@@ -11,7 +11,7 @@ void handle_child(session_t *sess)
 		memset(sess->arg, 0, sizeof(sess->arg));
 		readline(sess->ctrl_fd, sess->cmdline, MAX_COMMAND_LINE);
 
-		// find ftp command and args
+		//parsing ftp command and args
 		//process command
 
 	}
