@@ -1,5 +1,5 @@
 # MiniFTP
-Declarationg:`This project just for learning network programming and first use of open source.`
+Declaration:`This project just for learning network programming and use of open source(github).`
 ## 1. Function and Introduction:
 My blog: http://blog.csdn.net/qq_36196684<br>
 <br>
@@ -14,7 +14,7 @@ FTP have four file type:<br>
   Formed by ASCII chars. Each char have 7bit, and high bit is 0.<br>
 *  `EBCDIC file`: <br>
 *  `Image file`: binary file<br>
-  High bit is o/1.<br>
+  High bit is 0/1.<br>
 *  `Local file`:<br>
 
 windows:\r\n Linux:\n mac:\r<br>
@@ -71,7 +71,7 @@ This is the summodel, we implement the function int the model.<br>
 
 
 # MiniFTP Written with C++
-Implement in windos with c++.
+Implement in windows with c++.
 ## 1.Frame of sysmodel
 ![image](https://github.com/qinchao0525/MiniFTP/blob/master/pictures/2016112162409439.jpg)
 ## 2.Flow chart for C++ programming.
