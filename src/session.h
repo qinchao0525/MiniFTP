@@ -8,7 +8,7 @@ typedef struct session
 	char cmdline[MAX_COMMAND_LINE];
 	char cmd[MAX_COMMAND];
 	char arg[MAX_ARG];
-	//fuzi tongdao
+	//fuzi connect fd 
 	int parent_fd;
 	int child_fd;
 }session_t;
