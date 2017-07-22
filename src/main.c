@@ -15,16 +15,15 @@
 
 int main()
 {
+	//load config file.
 	parseconf_load_file(MINIFTP_CONF);
-	printf("tunable_listen_port=%d\n", tunable_pasv_enable);
-	
 
 	if( getuid() != 0 )//root?
 	{
 		fprintf(stderr, "miniftpd:must be started as root\n");
 		exit(EXIT_FAILURE);
 	}
-	session_t sess={-1, "","","", -1, -1};
+	session_t sess={0, -1, "","","", -1, -1};
 	
 	int listenfd=tcp_server(NULL, 5188);
 	int conn;
