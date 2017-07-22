@@ -11,6 +11,8 @@
 #include <arpa/inet.h>
 #include <pwd.h>
 #include <ctype.h>
+#include <shadow.h>
+#include <crypt.h>
 
 #include <stdio.h>
 #include <stdlib.h>
