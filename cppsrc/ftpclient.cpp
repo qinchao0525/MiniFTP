@@ -116,4 +116,33 @@ void ftpclient::start()
 	}
 }
 
-bool 
+bool ftpClient::connect2Host(const char* hostName)
+{
+	clientSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+
+	if(clientSocket < 0)
+	{
+		printf("cannot create socket\n");
+		return false;
+	}
+	else
+		printf("create success!\n");
+	memset(&serverChannel, 0, sizeof(serverChannel));
+
+	serverChannel.sin_family = AF_INET;
+	serverChannel.sin_addr.S_un.S_addr = inet_addr(hostname);
+	serverChannel.sin_port = htons(SERVER_PORT);
+
+	serverSocket = connect(clientSocket, (sockaddr *)&serverChannel, sizeof(serverChannel));
+
+	if(serverSocket<0)
+	{
+		printf("cannot connect to host\n");
+		return false;
+	}
+	else
+	{
+		printf("connect successful!\n");
+		return true;
+	}
+}
