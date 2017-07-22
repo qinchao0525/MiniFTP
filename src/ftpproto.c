@@ -6,6 +6,8 @@
 void ftp_reply(session_t *sess, int status, const char* text);
 void ftp_lreply(session_t *sess, int status, const char* text);
 
+int list_common(void);
+
 static void do_user(session_t *sess);
 static void do_pass(session_t *sess);
 static void do_cwd(session_t *sess);
@@ -151,6 +153,27 @@ void ftp_lreply(session_t *sess, int status, const char* text)
 	writen(sess->ctrl_fd, buf, strlen(buf));
 }
 
+int list_common(void)
+{
+	DIR *dir=opendir(".");
+	if(dir==NULL)
+		return 0;
+
+	struct dirent *dt;
+	struct stat sbuf;
+	while((dt=readdir(dir))!=NULL)
+	{
+		if(lstat(dt->d_name, &sbuf)<0)
+			continue;
+		char perms[]="----------";
+		perms[0]='?';
+	
+		mode_t mode=sbuf.st_mode;
+		switch(mode & S_IFMT)
+		{
+	}
+}
+
 static void do_user(session_t *sess)
 {
 	struct passwd *pw=getpwnam(sess->arg);
@@ -221,14 +244,16 @@ static void do_type(session_t *sess)
 {
 	if(strcmp(sess->arg, "A")==0)
 	{
+		sess->is_ascii = 1;
 		ftp_reply(sess, FTP_TYPEOK, "Switching to ASCII mode.");
 	}
 	else if(strcmp(sess->arg, "I")==0)
 	{
+		sess->is_ascii = 0;
 		ftp_reply(sess, FTP_TYPEOK, "Switching to Binary mode.");
 	}
 	else
-		ftp_reply(sess, FTP_BADCMD, "Switching to Type mode.");
+		ftp_reply(sess, FTP_BADCMD, "Unrecognised Type command.");
 }
 static void do_stru(session_t *sess)
 {
