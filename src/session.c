@@ -6,18 +6,6 @@
 
 void begin_session(session_t *sess)
 {
-	//change parent process to nobody process.
-	struct passwd *pw=getpwnam("nobody");	
-	if(pw==NULL)
-		return;
-	if( setegid(pw->pw_gid)<0 )
-	{
-		ERR_EXIT("setegid");
-	}
-	if( seteuid(pw->pw_uid)<0 )
-	{
-		ERR_EXIT("seteuid");
-	}
 
 	//unix domain connection
 	int sockfds[2];
@@ -39,6 +27,18 @@ void begin_session(session_t *sess)
 	else//nobody process
 	{
 		
+		//change parent process to nobody process.
+		struct passwd *pw=getpwnam("nobody");	
+		if(pw==NULL)
+			return;
+		if( setegid(pw->pw_gid)<0 )
+		{
+			ERR_EXIT("setegid");
+		}
+		if( seteuid(pw->pw_uid)<0 )
+		{
+			ERR_EXIT("seteuid");
+		}
 		close(sockfds[1]);
 		sess->parent_fd=sockfds[0];
 		handle_parent(sess);
