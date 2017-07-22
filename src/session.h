@@ -3,7 +3,9 @@
 #include "common.h"
 typedef struct session
 {
+	//uid
 	uid_t uid;
+	//control connection.
 	int ctrl_fd;
 	//control conn
 	char cmdline[MAX_COMMAND_LINE];
@@ -12,6 +14,8 @@ typedef struct session
 	//fuzi connect fd 
 	int parent_fd;
 	int child_fd;
+	//file status
+	int is_ascii;
 }session_t;
 
 
