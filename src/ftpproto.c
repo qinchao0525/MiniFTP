@@ -88,6 +88,10 @@ static void do_pass(session_t *sess)
 		ftp_reply(sess, FTP_LOGINERR, "Login incorrect." );
 		return;
 	}
+	
+	setegid(pw->pw_gid);
+	seteuid(pw->pw_uid);
+	chdir(pw->pw_dir);
 
 	ftp_reply(sess, FTP_LOGINOK, "Login successful.");
 }
