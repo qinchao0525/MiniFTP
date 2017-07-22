@@ -12,7 +12,6 @@ static void do_pass(session_t *sess);
 void handle_child(session_t *sess)
 {
 	ftp_reply(sess, 220, "miniftpd 0.1");
-	//writen(sess->ctrl_fd, "220 miniftpd 0.1\r\n", strlen("220 miniftpd 0.1\r\n"));//welcome page
 	int ret;
 	while(1)
 	{
