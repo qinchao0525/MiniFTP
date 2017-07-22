@@ -3,6 +3,7 @@
 #include "common.h"
 typedef struct session
 {
+	uid_t uid;
 	int ctrl_fd;
 	//control conn
 	char cmdline[MAX_COMMAND_LINE];
