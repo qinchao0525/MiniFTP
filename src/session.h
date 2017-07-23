@@ -11,6 +11,10 @@ typedef struct session
 	char cmdline[MAX_COMMAND_LINE];
 	char cmd[MAX_COMMAND];
 	char arg[MAX_ARG];
+	//address
+	struct sockaddr_in *port_addr;
+	//
+	int data_fd;
 	//fuzi connect fd 
 	int parent_fd;
 	int child_fd;
