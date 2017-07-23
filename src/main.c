@@ -5,6 +5,7 @@
 #include "str.h"
 #include "parseconf.h"
 #include "tunable.h"
+#include "ftpproto.h"
 
 #define ERR_EXIT(m)\
         do\
@@ -15,6 +16,7 @@
 
 int main()
 {
+	//list_common();
 	//load config file.
 	parseconf_load_file(MINIFTP_CONF);
 
