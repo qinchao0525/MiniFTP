@@ -13,6 +13,7 @@ typedef struct session
 	char arg[MAX_ARG];
 	//address
 	struct sockaddr_in *port_addr;
+	int pasv_listen_fd;//pasv mode
 	//
 	int data_fd;
 	//fuzi connect fd 
