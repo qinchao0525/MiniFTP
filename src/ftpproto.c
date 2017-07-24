@@ -10,6 +10,9 @@ void ftp_lreply(session_t *sess, int status, const char* text);
 int list_common(session_t *sess);
 int get_transfer_fd(session_t *sess);
 
+int port_active(session_t *sess);
+int pasv_active(session_t *sess);
+
 static void do_user(session_t *sess);
 static void do_pass(session_t *sess);
 static void do_cwd(session_t *sess);
@@ -346,6 +349,20 @@ static void do_port(session_t *sess)
 }
 static void do_pasv(session_t *sess)
 {
+	char ip[16]={0};
+	getlocalip(ip);
+	sess->pasv_listen_fd=tcp_server(ip, 0);
+	struct sockaddr_in addr;
+	socklen_t addrlen=sizeof(addr);
+	if( getsockname(sess->pasv_listen_fd, (struct sockaddr*)&addr, &addrlen) < 0)
+		ERR_EXIT("getsockname");
+	
+	unsigned short port=ntohs(addr.sin_port);
+	unsigned v[4];
+	sscanf(ip, "%u.%u.%u.%u", &v[0], &v[1], &v[2], &v[3]);
+	char text[1024]={0};
+	sprintf(text, "Enter Passive Mode (%u,%u,%u,%u,%u,%u).",v[0], v[1], v[2], v[3], port>>8, port & 0xFF );
+	ftp_reply(sess, FTP_PASVOK, text);
 }
 static void do_type(session_t *sess)
 {
@@ -380,20 +397,39 @@ static void do_appe(session_t *sess)
 //port model is active.
 int port_active(session_t *sess)
 {
-	if(sess->port_addr)
+	if(sess->port_addr)	
+	{
+		if(pasv_active(sess))
+		{
+			fprintf(stderr, "both port and pasv are active.");
+			exit(EXIT_FAILURE);
+		}
 		return 1;
+	}
 	else
 		return 0;
 }
 int pasv_active(session_t *sess)
 {
+	if(sess->pasv_listen_fd != -1)
+	{
+		if(port_active(sess))
+		{
+			fprintf(stderr, "both port and pasv are active.");
+			exit(EXIT_FAILURE);
+		}
+		return 1;
+	}
 	return 0;
 }
 int get_transfer_fd(session_t *sess)
 {
 	//test last command
 	if(!port_active(sess) && !pasv_active(sess))
+	{
+		ftp_reply(sess, FTP_BADSENDCONN, "Use port or pasv first.");
 		return 0;
+	}
 	// port mode
 	if(port_active(sess))
 	{
@@ -404,6 +440,19 @@ int get_transfer_fd(session_t *sess)
 			close(fd);
 			return 0;
 		}
+		sess->data_fd = fd;
+	}
+	// if it is pasv mode.
+	if(pasv_active(sess))
+	{
+		int fd = accept_timeout(sess->pasv_listen_fd, NULL, tunable_accept_timeout);
+		close(sess->pasv_listen_fd);
+		if(fd==-1)//create fd failure
+		{
+			close(sess->pasv_listen_fd);
+			return 0;
+		}
+		
 		sess->data_fd = fd;
 	}
 	if(sess->port_addr)
@@ -425,6 +474,7 @@ static void do_list(session_t *sess)
 	list_common(sess);
 	//close connection
 	close(sess->data_fd);
+	sess->data_fd=-1;
 	//226
 	ftp_reply(sess, FTP_TRANSFEROK, "Direscory send ok.");
 }
