@@ -3,7 +3,7 @@ Declaration:`This project just for learning network programming and use of open 
 ## 1. Function and Introduction:
 My blog: http://blog.csdn.net/qq_36196684<br>
 <br>
-Implement of MiniFTP server.<br>
+Implement of MiniFTP server（Have not finished yet）.<br>
 ### 1.1 Introduction
 FTP(File Transfer Protocal), working in appliction-layer of TCP/IP whose transfer-layer is using TCP.<br>
 FTP is based on C/S model.<br>
