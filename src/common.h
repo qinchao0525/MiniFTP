@@ -13,6 +13,7 @@
 #include <ctype.h>
 #include <shadow.h>
 #include <crypt.h>
+#include <signal.h>
 
 #include <time.h>
 #include <sys/stat.h>
