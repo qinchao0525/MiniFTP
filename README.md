@@ -1,5 +1,5 @@
 # MiniFTP
-Declaration:`This project just for learning network programming and use of open source(github).`
+Declaration:`This project just for learning network programming and use of open source with multi-thread and <br>multi-processing(github).`
 ## 1. Function and Introduction:
 My blog: http://blog.csdn.net/qq_36196684<br>
 <br>
