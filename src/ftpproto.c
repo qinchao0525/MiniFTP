@@ -3,6 +3,7 @@
 #include "str.h"
 #include "ftpcodes.h"
 #include "tunable.h"
+#include "privsock.h"
 
 void ftp_reply(session_t *sess, int status, const char* text);
 void ftp_lreply(session_t *sess, int status, const char* text);
@@ -422,6 +423,25 @@ int pasv_active(session_t *sess)
 	}
 	return 0;
 }
+int get_port_fd(session_t *sess)//creating data socket fd 
+{
+		
+		priv_sock_send_cmd(sess->child_fd, PRIV_SOCK_GET_DATA_SOCK);
+		unsigned short port = ntohs(sess->port_addr->sin_port);
+		char *ip = inet_ntoa(sess->port_addr->sin_addr);
+		priv_sock_send_int(sess->child_fd, (int)port);
+		priv_sock_send_buf(sess->child_fd, ip, strlen(ip));
+
+		//get result.
+		char res=priv_sock_get_result(sess->child_fd);
+		if(res==PRIV_SOCK_RESULT_BAD)
+			return 0;
+		else if (res==PRIV_SOCK_RESULT_OK)
+		{
+			sess->data_fd = priv_sock_recv_fd(sess->child_fd);
+		}
+		return 1;
+}
 int get_transfer_fd(session_t *sess)
 {
 	//test last command
@@ -431,16 +451,19 @@ int get_transfer_fd(session_t *sess)
 		return 0;
 	}
 	// port mode
+	int ret=1;
 	if(port_active(sess))
 	{
 		//tcp client(20 port)
-		int fd = tcp_client(0);
+		/*int fd = tcp_client(0);
 		if( connect_timeout(fd, sess->port_addr, tunable_connect_timeout)<0)
 		{
 			close(fd);
 			return 0;
 		}
-		sess->data_fd = fd;
+		sess->data_fd = fd;*/
+		if(get_port_fd(sess)==0)
+			ret=0;
 	}
 	// if it is pasv mode.
 	if(pasv_active(sess))
@@ -460,7 +483,8 @@ int get_transfer_fd(session_t *sess)
 		free(sess->port_addr);
 		sess->port_addr=NULL;
 	}
-	return 1;
+	
+	return ret;
 }
 //transfer list
 static void do_list(session_t *sess)
