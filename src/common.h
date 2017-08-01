@@ -14,6 +14,7 @@
 #include <shadow.h>
 #include <crypt.h>
 #include <signal.h>
+#include <linux/capability.h>
 
 #include <time.h>
 #include <sys/stat.h>
