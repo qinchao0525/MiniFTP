@@ -69,7 +69,9 @@ command between service and client processing.
 This is the summodel, we implement the function int the model.<br>
 ![submodel](https://github.com/qinchao0525/MiniFTP/blob/master/pictures/submodel.jpg)
 <br>P3. summodel</br>
-
+### 3.2 string function
+### 3.3 configuration
+### 3.4 FTP cmd map
 
 # MiniFTP Written with C++
 Implement in windows with c++.
