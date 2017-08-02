@@ -352,6 +352,8 @@ static void do_pasv(session_t *sess)
 {
 	char ip[16]={0};
 	getlocalip(ip);
+	
+/*
 	sess->pasv_listen_fd=tcp_server(ip, 0);
 	struct sockaddr_in addr;
 	socklen_t addrlen=sizeof(addr);
@@ -359,6 +361,10 @@ static void do_pasv(session_t *sess)
 		ERR_EXIT("getsockname");
 	
 	unsigned short port=ntohs(addr.sin_port);
+*/
+	priv_sock_send_cmd(sess->child_fd, PRIV_SOCK_PASV_LISTEN);
+	unsigned short port = (int)priv_sock_get_int(sess->child_fd);
+	
 	unsigned v[4];
 	sscanf(ip, "%u.%u.%u.%u", &v[0], &v[1], &v[2], &v[3]);
 	char text[1024]={0};
@@ -412,7 +418,20 @@ int port_active(session_t *sess)
 }
 int pasv_active(session_t *sess)
 {
+/*
 	if(sess->pasv_listen_fd != -1)
+	{
+		if(port_active(sess))
+		{
+			fprintf(stderr, "both port and pasv are active.");
+			exit(EXIT_FAILURE);
+		}
+		return 1;
+	}
+*/
+	priv_sock_send_cmd(sess->child_fd, PRIV_SOCK_PASV_ACTIVE);
+	int active = priv_sock_get_int(sess->child_fd);
+	if(active)
 	{
 		if(port_active(sess))
 		{
@@ -442,6 +461,22 @@ int get_port_fd(session_t *sess)//creating data socket fd
 		}
 		return 1;
 }
+
+int get_pasv_fd(session_t *sess)
+{
+	priv_sock_send_cmd(sess->child_fd, PRIV_SOCK_PASV_ACCEPT);
+	char res = priv_sock_get_result(sess->child_fd);
+	if(res==PRIV_SOCK_RESULT_BAD)
+	{
+		return 0;
+	}
+	else if(res==PRIV_SOCK_RESULT_OK)
+	{
+		sess->data_fd = priv_sock_recv_fd(sess->child_fd);
+	}
+	return 1;
+}
+
 int get_transfer_fd(session_t *sess)
 {
 	//test last command
@@ -468,6 +503,7 @@ int get_transfer_fd(session_t *sess)
 	// if it is pasv mode.
 	if(pasv_active(sess))
 	{
+/*
 		int fd = accept_timeout(sess->pasv_listen_fd, NULL, tunable_accept_timeout);
 		close(sess->pasv_listen_fd);
 		if(fd==-1)//create fd failure
@@ -477,6 +513,11 @@ int get_transfer_fd(session_t *sess)
 		}
 		
 		sess->data_fd = fd;
+*/
+		if(get_pasv_fd(sess)==0)
+		{
+			ret=0;
+		}
 	}
 	if(sess->port_addr)
 	{
