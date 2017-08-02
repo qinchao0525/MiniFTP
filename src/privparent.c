@@ -4,11 +4,11 @@
 #include "tunable.h"
 #include "sysutil.h"
 
-int capset(cap_user_header_t hdrp, cap_user_data_t datap)
+/*int capset(cap_user_header_t hdrp, cap_user_data_t datap)
 {
 	return syscall(__NR_capset, hdrp, datap);
 }
-
+*/
 static void privop_pasv_get_data_sock(session_t *sess)//binding 20 and connecting
 {
 	unsigned short port = (unsigned short)priv_sock_get_int(sess->parent_fd);
@@ -40,12 +40,42 @@ static void privop_pasv_get_data_sock(session_t *sess)//binding 20 and connectin
 }
 static void privop_pasv_active(session_t *sess)
 {
+	int active;
+	if(sess->pasv_listen_fd != -1)
+		active = 1;
+	else
+		active = 0;
+	priv_sock_send_int(sess->parent_fd, active);
 }
 static void privop_pasv_listen(session_t *sess)
 {
+	char ip[16]={0};
+	getlocalip(ip);
+
+	sess->pasv_listen_fd=tcp_server(ip, 0);
+	struct sockaddr_in addr;
+	socklen_t addrlen=sizeof(addr);
+	if( getsockname(sess->pasv_listen_fd, (struct sockaddr*)&addr, &addrlen) < 0)
+		ERR_EXIT("getsockname");
+	
+	unsigned short port=ntohs(addr.sin_port);
+	priv_sock_send_int(sess->parent_fd, port);
+	
 }
 static void privop_pasv_accept(session_t *sess)
 {
+		int fd = accept_timeout(sess->pasv_listen_fd, NULL, tunable_accept_timeout);
+		close(sess->pasv_listen_fd);
+		if(fd==-1)//create fd failure
+		{
+			priv_sock_send_result(sess->parent_fd, PRIV_SOCK_RESULT_BAD);
+			return ;
+		}
+		
+		priv_sock_send_result(sess->parent_fd, PRIV_SOCK_RESULT_OK);
+		priv_sock_send_fd(sess->parent_fd, fd);
+		close(fd);
+	
 }
 //minimize privilege.
 void minimize_privilege(void)
