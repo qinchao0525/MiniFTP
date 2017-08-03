@@ -500,3 +500,8 @@ const char * statbuf_get_date(struct stat *sbuf)
 
 	return datebuf;
 }
+
+int lock_file_read(int fd)
+{
+	int re 
+}
