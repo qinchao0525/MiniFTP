@@ -5,10 +5,10 @@
 #include "tunable.h"
 #include "privsock.h"
 
-void ftp_reply(session_t *sess, int status, const char* text);
+void ftp_reply(session_t *sess, int status, const char*text);
 void ftp_lreply(session_t *sess, int status, const char* text);
 
-int list_common(session_t *sess);
+int list_common(session_t *sess, int detail);
 int get_transfer_fd(session_t *sess);
 
 int port_active(session_t *sess);
@@ -159,7 +159,7 @@ void ftp_lreply(session_t *sess, int status, const char* text)
 	writen(sess->ctrl_fd, buf, strlen(buf));
 }
 
-int list_common(session_t *sess)
+int list_common(session_t *sess, int detail)
 {
 	DIR *dir=opendir(".");
 	if(dir==NULL)
@@ -173,95 +173,34 @@ int list_common(session_t *sess)
 			continue;
 		if(dt->d_name[0]=='.')
 			continue;
-		char perms[]="----------";
-		perms[0]='?';
-	
-		mode_t mode=sbuf.st_mode;
-		switch(mode & S_IFMT)
-		{
-		case S_IFREG:
-			perms[0]='-';
-			break;
-		case S_IFDIR:
-			perms[0]='d';
-			break;
-		case S_IFLNK:
-			perms[0]='l';
-			break;
-		case S_IFIFO:
-			perms[0]='p';
-			break;
-		case S_IFSOCK:
-			perms[0]='s';
-			break;
-		case S_IFCHR:
-			perms[0]='c';
-			break;
-		case S_IFBLK:
-			perms[0]='b';
-			break;
-		}
-		
-		if(mode & S_IRUSR)
-			perms[1]='r';
-		if(mode & S_IWUSR)
-			perms[2]='w';
-		if(mode & S_IXUSR)
-			perms[3]='x';
 
-		if(mode & S_IRGRP)
-			perms[4]='r';
-		if(mode & S_IWGRP)
-			perms[5]='w';
-		if(mode & S_IXGRP)
-			perms[6]='x';
-
-		if(mode & S_IROTH)
-			perms[7]='r';
-		if(mode & S_IWOTH)
-			perms[8]='w';
-		if(mode & S_IXOTH)
-			perms[9]='x';
-		
-		//special mode
-		if(mode & S_ISUID)
-			perms[3]=(perms[3]=='x') ? 's' : 'S';
-		if(mode & S_ISGID)
-			perms[6]=(perms[6]=='x') ? 's' : 'S';
-		if(mode & S_ISVTX)
-			perms[9]=(perms[9]=='x') ? 's' : 'S';
-		
 		char buf[1024] = {0};
-		int off=0;
-		off += sprintf(buf, "%s", perms);
-		off += sprintf(buf+off, "%3d %-8d %-8d", (int)sbuf.st_nlink, sbuf.st_uid, sbuf.st_gid);
-		off += sprintf(buf+off, " %8lu ", (unsigned long)sbuf.st_size);
-		
-		const char *p_date_format = "%b %e %H:%M";
-		struct timeval tv;
-		gettimeofday(&tv, NULL);
-		time_t local_time = tv.tv_sec;
-		if(sbuf.st_mtime > local_time || (local_time - sbuf.st_mtime) > 60*60*24*182)
+		if(detail)
 		{
-			p_date_format = "%b %e %y";
-		}
+			const char *perms = statbuf_get_perms(&sbuf);
 
-		char datebuf[64] = {0};
-		struct tm* p_tm = localtime(&local_time);
-		strftime(datebuf, sizeof(datebuf), p_date_format, p_tm);
-		off += sprintf(buf+off, "%s", datebuf);
-		
-		//file name
+			int off=0;
+			off += sprintf(buf, "%s", perms);
+			off += sprintf(buf+off, "%3d %-8d %-8d", (int)sbuf.st_nlink, sbuf.st_uid, sbuf.st_gid);
+			off += sprintf(buf+off, " %8lu ", (unsigned long)sbuf.st_size);
 
-		if(S_ISLNK(sbuf.st_mode))
-		{
-			char tmp[1024]={0};
-			readlink(dt->d_name, tmp, sizeof(tmp));
-			off += sprintf(buf+off, "%s -> %s\r\n", dt->d_name, tmp);
+
+			const char *datebuf = statbuf_get_date(&sbuf);
+			off += sprintf(buf+off, "%s", datebuf);		
+			//file name
+			if(S_ISLNK(sbuf.st_mode))
+			{
+				char tmp[1024]={0};
+				readlink(dt->d_name, tmp, sizeof(tmp));
+				off += sprintf(buf+off, "%s -> %s\r\n", dt->d_name, tmp);
+			}
+			else
+				off +=sprintf(buf+off, " %s\r\n", dt->d_name);
 		}
 		else
-			off +=sprintf(buf+off, " %s\r\n", dt->d_name);
-
+		{
+				sprintf(buf, " %s\r\n", dt->d_name);
+		}
 
 		writen(sess->data_fd, buf, strlen(buf));
 	}
@@ -313,6 +252,7 @@ static void do_pass(session_t *sess)
 		return;
 	}
 	
+	umask(tunable_local_umask);
 	setegid(pw->pw_gid);
 	seteuid(pw->pw_uid);
 	chdir(pw->pw_dir);
@@ -322,9 +262,21 @@ static void do_pass(session_t *sess)
 
 static void do_cwd(session_t *sess)
 {
+		if (chdir(sess->arg)<0)//chage directory
+		{
+			ftp_reply(sess, FTP_FILEFAIL, "Failed to chage directory.");
+		}
+		ftp_reply(sess, FTP_CWDOK, "Directory successfully changed.");
+
 }
 static void do_cdup(session_t *sess)
 {
+		if (chdir("..")<0)//chage directory
+		{
+			ftp_reply(sess, FTP_FILEFAIL, "Failed to chage directory.");
+		}
+		ftp_reply(sess, FTP_CWDOK, "Directory successfully changed.");
+		
 }
 static void do_quit(session_t *sess)
 {
@@ -536,7 +488,7 @@ static void do_list(session_t *sess)
 	//150 reply
 	ftp_reply(sess, FTP_DATACONN, "Here comes the directory listing.");
 	//transfer list
-	list_common(sess);
+	list_common(sess, 1);
 	//close connection
 	close(sess->data_fd);
 	sess->data_fd=-1;
@@ -545,9 +497,25 @@ static void do_list(session_t *sess)
 }
 static void do_nlst(session_t *sess)
 {
+	//create data connection
+	if (get_transfer_fd(sess)==0)
+		return;
+	//150 reply
+	ftp_reply(sess, FTP_DATACONN, "Here comes the directory listing.");
+	//transfer list
+	list_common(sess, 0);
+	//close connection
+	close(sess->data_fd);
+	sess->data_fd=-1;
+	//226
+	ftp_reply(sess, FTP_TRANSFEROK, "Direscory send ok.");
 }
 static void do_rest(session_t *sess)
 {
+	sess->restart_pos = str_to_longlong(sess->arg);
+	char text[1024]={0};
+	sprintf(text, "Restart position accepted (%lld).", sess->restart_pos);
+	ftp_reply(sess, FTP_RESTOK, text);
 }
 static void do_abor(session_t *sess)
 {
@@ -562,12 +530,46 @@ static void do_pwd(session_t *sess)
 }
 static void do_mkd(session_t *sess)
 {
+		if(mkdir(sess->arg, 0777)<0)
+		{
+			return ;
+		}
+		char text[4096]={0};
+		if(sess->arg[0]=='/')
+		{
+			sprintf(text, "%s created", sess->arg);
+		}
+		else
+		{
+			char dir[4096+1]={0};
+			getcwd(dir, 4096);
+			if(dir[strlen(dir)-1] == '/')
+			{
+				sprintf(text, "%s%s created", dir, sess->arg);
+			}
+			else
+			{
+				sprintf(text, "%s/%s created", dir, sess->arg);
+			}
+		}
+		ftp_reply(sess, FTP_MKDIROK, text);
 }
 static void do_rmd(session_t *sess)
 {
+	if(rmdir(sess->arg)<0)
+	{
+		ftp_reply(sess, FTP_FILEFAIL, "Remove directory operation failed.");		
+	}
+		ftp_reply(sess, FTP_RMDIROK, "Remove directory operation successful.");		
 }
 static void do_dele(session_t *sess)
 {
+	if(unlink(sess->arg)<0)
+	{
+		ftp_reply(sess, FTP_FILEFAIL, "Delete operation failed.");		
+		return ;
+	}
+	ftp_reply(sess, FTP_DELEOK, "Delete operation successful.");
 }
 static void do_rnfr(session_t *sess)
 {
@@ -598,6 +600,21 @@ static void do_feat(session_t *sess)
 
 static void do_size(session_t *sess)
 {
+	struct stat buf;
+	if(	stat(sess->arg, &buf) < 0)
+	{
+		ftp_reply(sess, FTP_FILEFAIL, "SIZE operation failed.");
+		return;
+	}
+	if(!S_ISREG(buf.st_mode))
+	{
+		ftp_reply(sess, FTP_FILEFAIL, "Could not get file size.");
+		return ;
+
+	}
+	char text[1024]={0};
+	sprintf(text, "%lld", (long long)buf.st_size);
+	ftp_reply(sess, FTP_SIZEOK, text);
 }
 static void do_stat(session_t *sess)
 {
