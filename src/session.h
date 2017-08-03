@@ -21,6 +21,7 @@ typedef struct session
 	int child_fd;
 	//file status
 	int is_ascii;
+	long long restart_pos;
 }session_t;
 
 
