@@ -22,6 +22,8 @@ typedef struct session
 	//file status
 	int is_ascii;
 	long long restart_pos;
+	//
+	char *rnfr_name;
 }session_t;
 
 
