@@ -50,6 +50,7 @@ void priv_sock_set_child_context(session_t *sess)
 //send cmd from ftp server to nobody
 void priv_sock_send_cmd(int fd, char cmd)
 {
+	//printf("%c", cmd);
 	int ret;
 	ret=writen(fd, &cmd, sizeof(cmd));//send cmd to nobody process.
 	if(ret!=sizeof(cmd))
@@ -66,6 +67,7 @@ char priv_sock_get_cmd(int fd)
 	ret = readn(fd, &res, sizeof(res));
 	if(ret!=sizeof(res))
 	{
+		//printf("cmd is : %c\n", res);
 		fprintf(stderr, "priv_Sock_get_cmd error\n");
 		exit(EXIT_FAILURE);
 	}
