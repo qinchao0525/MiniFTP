@@ -10,4 +10,4 @@ $(BIN):$(OBJS)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	rm -f *.o $(BIN)
+	rm -f *.o 
