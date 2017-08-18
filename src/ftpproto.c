@@ -1,4 +1,30 @@
-do_retr(session_t *sess);
+#include "ftpproto.h"
+#include "sysutil.h"
+#include "str.h"
+#include "ftpcodes.h"
+#include "tunable.h"
+#include "privsock.h"
+
+void ftp_reply(session_t *sess, int status, const char*text);
+void ftp_lreply(session_t *sess, int status, const char* text);
+
+int list_common(session_t *sess, int detail);
+int get_transfer_fd(session_t *sess);
+
+int port_active(session_t *sess);
+int pasv_active(session_t *sess);
+
+static void do_user(session_t *sess);
+static void do_pass(session_t *sess);
+static void do_cwd(session_t *sess);
+static void do_cdup(session_t *sess);
+static void do_quit(session_t *sess);
+static void do_port(session_t *sess);
+static void do_pasv(session_t *sess);
+static void do_type(session_t *sess);
+static void do_stru(session_t *sess);
+static void do_mode(session_t *sess);
+static void do_retr(session_t *sess);
 static void do_stor(session_t *sess);
 static void do_appe(session_t *sess);
 static void do_list(session_t *sess);
@@ -320,26 +346,6 @@ static void do_mode(session_t *sess)
 }
 static void do_retr(session_t *sess)
 {
-	if(get_transfer_fd(sess)==0)
-	{
-		return ;
-	}
-
-	int fd=open(sess->arg, O_RDONLY);
-	if(fd==-1)
-	{
-		ftp_reply(sess, FTP_FILEFAIL, "Fail to open file.");
-		return;
-	}
-
-	int ret;
-	//add read mutex
-	ret =lock_file_read(fd);
-	if(ret==-1)
-	{
-		ftp_reply(sess, FTP_FILEFAIL, "Failed to open file.");
-		return;
-	}
 }
 static void do_stor(session_t *sess)
 {
@@ -567,23 +573,9 @@ static void do_dele(session_t *sess)
 }
 static void do_rnfr(session_t *sess)
 {
-	sess->rnfr_name = (char *)malloc(strlen(sess->arg)+1);
-	memset(sess->rnfr_name, 0, strlen(sess->arg)+1);
-	strcpy(sess->rnfr_name, sess->arg);
-	ftp_reply(sess, FTP_RNFROK, "Ready for RNTO.");
 }
 static void do_rnto(session_t *sess)
 {
-	if(sess->rnfr_name==NULL)
-	{
-		ftp_reply(sess, FTP_NEEDRNFR, "RNFR required first.");
-		return ;
-	}
-	rename(sess->rnfr_name, sess->arg);
-	ftp_reply(sess, FTP_RENAMEOK, "Rename successful.");
-
-	free(sess->rnfr_name);
-	sess->rnfr_name=NULL;
 }
 static void do_site(session_t *sess)
 {
