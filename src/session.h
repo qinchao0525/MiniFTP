@@ -14,6 +14,11 @@ typedef struct session
 	//address
 	struct sockaddr_in *port_addr;
 	int pasv_listen_fd;//pasv mode
+	//rate limited
+	unsigned int bw_upload_rate_max;
+	unsigned int bw_download_rate_max;
+	long bw_transfer_start_sec;
+	long bw_transfer_start_usec;
 	//
 	int data_fd;
 	//fuzi connect fd 
