@@ -25,8 +25,11 @@ int main()
 		fprintf(stderr, "miniftpd:must be started as root\n");
 		exit(EXIT_FAILURE);
 	}
-	session_t sess={0, -1, "","","", NULL, -1, -1, -1, -1, 0, 0, NULL};
+	session_t sess={0, -1, "","","", NULL, -1, 0,0,0,0, -1, -1, -1, 0, 0, NULL};
 	
+	sess.bw_upload_rate_max = tunable_upload_max_rate;
+	sess.bw_download_rate_max = tunable_download_max_rate;
+
 	signal(SIGCHLD, SIG_IGN);
 	int listenfd=tcp_server(NULL, 5188);
 	int conn;
