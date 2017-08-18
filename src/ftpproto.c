@@ -9,6 +9,7 @@ void ftp_reply(session_t *sess, int status, const char*text);
 void ftp_lreply(session_t *sess, int status, const char* text);
 
 void upload_common(session_t *sess, int is_append);
+void limit_rate(session_t *sess, int bytes_transfered, int is_upload);
 
 int list_common(session_t *sess, int detail);
 int get_transfer_fd(session_t *sess);
@@ -210,6 +211,46 @@ int list_common(session_t *sess, int detail)
 	return 1;
 }
 
+void limit_rate(session_t *sess, int bytes_transfered, int is_upload)
+{
+	long curr_sec = get_time_sec();
+	long curr_usec = get_time_usec();
+
+	double elapsed;
+	elapsed = curr_sec - sess->bw_transfer_start_sec;
+	elapsed += (double)(curr_usec-sess->bw_transfer_start_usec)/(double)1000000;
+	if(elapsed <= 0)
+		elapsed = 0.01;
+
+	//current transfer rate
+	unsigned int bw_rate = (unsigned int)((double)bytes_transfered / elapsed);
+
+	double rate_ratio;
+	if(is_upload)
+	{
+		if(bw_rate < sess->bw_upload_rate_max)
+		{
+			return ;
+		}
+		rate_ratio =  bw_rate / sess->bw_upload_rate_max ;
+	}
+	else
+	{
+		if(bw_rate < sess->bw_download_rate_max)
+		{
+			return;
+		}
+		rate_ratio = bw_rate / sess->bw_download_rate_max ;
+	}
+	double pause_time;
+	pause_time = (rate_ratio - (double)1) * elapsed;
+
+	nano_sleep(pause_time);
+
+	sess->bw_transfer_start_sec = get_time_sec();
+	sess->bw_transfer_start_usec = get_time_usec();
+}
+
 void upload_common(session_t *sess, int is_append)
 {
 	//create data connection
@@ -288,6 +329,10 @@ void upload_common(session_t *sess, int is_append)
 	int flag=0;
 	//upload file
 	char buf[1024];
+	sess->bw_transfer_start_sec = get_time_sec();
+	sess->bw_transfer_start_usec = get_time_usec();
+
+	//sleeptime = 
 	while(1)
 	{
 		ret=read(sess->data_fd, buf, sizeof(buf));
@@ -309,6 +354,8 @@ void upload_common(session_t *sess, int is_append)
 			break;
 		}
 
+		limit_rate(sess, ret, 1);
+	
 		if(	writen(fd, buf, ret) != ret )
 		{
 			flag=1;
