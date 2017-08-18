@@ -73,6 +73,7 @@ This is the summodel, we implement the function int the model.<br>
 ### 3.3 configuration
 ### 3.4 FTP cmd map
 ### 3.5 process communicate model
+### 3.6 transfer and appe(abord point retransfer)
 # MiniFTP Written with C++
 Implement in windows with c++.
 ## 1.Frame of sysmodel
