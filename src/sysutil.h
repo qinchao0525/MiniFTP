@@ -30,4 +30,9 @@ const char * statbuf_get_date(struct stat *sbuf);
 int lock_file_read(int fd);
 int lock_file_write(int fd);
 int unlock_file(int fd);
+
+long get_time_sec(void);
+long get_time_usec(void);
+void nano_sleep(double seconds);
+
 #endif /*_SYS_UTIL_H*/
