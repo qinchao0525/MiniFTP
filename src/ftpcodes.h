@@ -1,5 +1,6 @@
 #ifndef _FTP_CODES_H_
 #define _FTP_CODES_H_
+//reply code of ftp transfer.
 
 #define FTP_DATACONN            150
 
