@@ -2,12 +2,13 @@
 #include "common.h"
 #include "tunable.h"
 #include "str.h"
-//bool
+//******************bool setting 
 static struct parseconf_bool_setting
 {
 	const char *p_setting_name;
 	int *p_variable;
 }
+//value of bool
 parseconf_bool_array[] = 
 {
 	{"pasv_enable", &tunable_pasv_enable},
@@ -15,7 +16,7 @@ parseconf_bool_array[] =
 	{NULL, NULL}
 };
 
-//uint type
+//uint type***********************
 static struct parseconf_uint_setting
 {
 	const char *p_setting_name;
@@ -23,20 +24,20 @@ static struct parseconf_uint_setting
 }
 parseconf_uint_array[] =
 {
-	{"listen_port", &tunable_listen_port},
-	{"max_clients", &tunable_max_clients},
-	{"max_per_ip", &tunable_max_per_ip},
-	{"accept_timeout", &tunable_accept_timeout},
-	{"connect_timeout", &tunable_connect_timeout},
-	{"idle_session_timeout", &tunable_idel_session_timeout},
-	{"data_connection_timeout", &tunable_data_connection_timeout},
-	{"local_umask", &tunable_local_umask},
-	{"upload_max_rate", &tunable_upload_max_rate},
-	{"download_max_rate", &tunable_download_max_rate},
-	{NULL, NULL}
+	{"listen_port", &tunable_listen_port},//listen port
+	{"max_clients", &tunable_max_clients},//max number of clients
+	{"max_per_ip", &tunable_max_per_ip},//max number of connection per ip
+	{"accept_timeout", &tunable_accept_timeout},//accept timeout value
+	{"connect_timeout", &tunable_connect_timeout},//connect time out
+	{"idle_session_timeout", &tunable_idel_session_timeout},//
+	{"data_connection_timeout", &tunable_data_connection_timeout},//
+	{"local_umask", &tunable_local_umask},//
+	{"upload_max_rate", &tunable_upload_max_rate},//max upload rate b/s
+	{"download_max_rate", &tunable_download_max_rate},//download rate
+	{NULL, NULL}//flag to stop
 };
 
-//str setting
+//str setting *********************************
 static struct parseconf_str_setting
 {
 	const char *p_setting_name;
@@ -44,11 +45,11 @@ static struct parseconf_str_setting
 }
 parseconf_str_array[] =
 {
-	{"listen_address", &tunable_listen_address},
-	{NULL, NULL}
+	{"listen_address", &tunable_listen_address},//address 
+	{NULL, NULL}//flage to stop
 };
 
-//load file config
+//load file config function******************************
 void parseconf_load_file(const char *path)
 {
 	FILE *fp = fopen(path, "r");
@@ -76,8 +77,8 @@ void parseconf_load_setting(const char *setting)
 	//parsing value.
 	char key[128]={0};
 	char value[128]={0};
-	str_split(setting, key, value, '=');
-	if(strlen(value)==0)
+	str_split(setting, key, value, '=');//get value
+	if(strlen(value)==0)//no value
 	{
 		fprintf(stderr, "missing value in config for :%s\n", key);
 		exit(EXIT_FAILURE);
