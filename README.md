@@ -88,3 +88,5 @@ will be made when server and client has suited port and both are free.<br>
   Server will continue to wait for connection when client require to break the link, but server only <br>
 use the way that one client with one server with out multi-process.
 ## 4.Data format
+
+## 5.使用方法
