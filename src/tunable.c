@@ -1,5 +1,5 @@
 #include "tunable.h"
-
+// global val for config value.
 int tunable_pasv_enable = 1;
 int tunable_port_enable = 1;
 unsigned int tunable_listen_port = 21;
