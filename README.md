@@ -67,7 +67,7 @@ Every single c/s connection has two sub process, one is for sevice and another i
 command between service and client processing.
 ### 3.1 submodel
 This is the summodel, we implement the function int the model.<br>
-![submodel](https://github.com/qinchao0525/MiniFTP/blob/master/pictures/submodel.jpg)
+![submodel](https://github.com/qinchao0525/MiniFTP/blob/master/pictures/submodel.png)
 <br>P3. summodel</br>
 ### 3.2 string function
 ### 3.3 configuration
