@@ -10,6 +10,16 @@
 #include <fcntl.h>
 #include <arpa/inet.h>
 #include <pwd.h>
+#include <ctype.h>
+#include <shadow.h>
+#include <crypt.h>
+#include <signal.h>
+#include <linux/capability.h>
+
+#include <time.h>
+#include <sys/stat.h>
+#include <dirent.h>
+#include <sys/time.h>
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -25,5 +35,6 @@
 #define MAX_COMMAND_LINE 1024
 #define MAX_COMMAND 32
 #define MAX_ARG 1024
+#define MINIFTP_CONF "miniftpd.conf"
 
 #endif
