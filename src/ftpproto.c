@@ -112,6 +112,7 @@ void handle_child(session_t *sess)
 		memset(sess->cmdline, 0, sizeof(sess->cmdline));
 		memset(sess->cmd, 0, sizeof(sess->cmd));
 		memset(sess->arg, 0, sizeof(sess->arg));
+		/*get cmd */
 		ret=readline(sess->ctrl_fd, sess->cmdline, MAX_COMMAND_LINE);
 		if(ret==-1)
 			ERR_EXIT("readline");
@@ -119,7 +120,7 @@ void handle_child(session_t *sess)
 			exit(EXIT_SUCCESS);
 		printf("cmdline=[%s]\n", sess->cmdline);
 		//remove \r\n
-		str_trim_crlf(sess->cmdline);
+		str_trim_crlf(sess->cmdline);//cut cmd and value
 		printf("cmdline=[%s]\n", sess->cmdline);
 		//parsing ftp command and args
 		str_split(sess->cmdline, sess->cmd, sess->arg, ' ');
@@ -296,7 +297,7 @@ void upload_common(session_t *sess, int is_append)
 	//relocate. break point reconnect.
 	if(offset!=0)
 	{
-		ret = lseek(fd, offset, SEEK_SET);
+		ret = lseek(fd, offset, SEEK_SET);//
 		if(ret==-1)
 		{
 			ftp_reply(sess, FTP_FILEFAIL, "Failed to open file");
