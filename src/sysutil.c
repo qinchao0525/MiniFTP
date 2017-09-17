@@ -184,7 +184,7 @@ int read_timeout(int fd, unsigned int wait_seconds)
 	int ret;
 	if(wait_seconds > 0)
 	{
-		fd_set read_fdset;
+		fd_set read_fdset;//read fd set 
 		struct timeval timeout;
 
 		FD_ZERO(&read_fdset);
@@ -203,27 +203,27 @@ int read_timeout(int fd, unsigned int wait_seconds)
 			errno=ETIMEDOUT;
 		}
 		else if(ret==1)
-			ret=0;
+			ret=0;  
 	}
 	return ret;
 }
-
+// I/O multi-use model
 int write_timeout(int fd, unsigned int wait_seconds)
 {
 	int ret;
 	if(wait_seconds > 0)
 	{
-		fd_set write_fdset;
-		struct timeval timeout;
+		fd_set write_fdset;// fd write set{fd}
+		struct timeval timeout;//seting time
 		
-		FD_ZERO(&write_fdset);
-		FD_SET(fd, &write_fdset);
+		FD_ZERO(&write_fdset);//set all fd to 0
+		FD_SET(fd, &write_fdset);// add fd to fdset
 
-		timeout.tv_sec=wait_seconds;
-		timeout.tv_usec=0;
+		timeout.tv_sec=wait_seconds;//seconds
+		timeout.tv_usec=0;//useconds
 		do
 		{
-			ret=select(fd+1, NULL, NULL, &write_fdset, &timeout);
+			ret=select(fd+1, NULL, NULL, &write_fdset, &timeout);// select model
 		}while(ret<0 && errno==EINTR);
 	
 		if(ret==0)
@@ -293,7 +293,7 @@ void activate_nonblock(int fd)
 void deactivate_nonblock(int fd)
 {
 	int ret;
-	int flags=fcntl(fd, F_GETFL);
+	int flags=fcntl(fd, F_GETFL);//get or set file stats.
 	if(flags==-1)
 		ERR_EXIT("fcntl");
 
@@ -570,7 +570,7 @@ void nano_sleep(double seconds)
 
 	struct timespec ts;
 	ts.tv_sec = secs;
-	ts.tv_nsec = (long)(fractional * (double)1000000000);
+	ts.tv_nsec = (long)(fractional * (double)1000000000);//every 1 seconds.
 	
 	int ret;
 	do
