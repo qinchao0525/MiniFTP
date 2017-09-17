@@ -67,7 +67,7 @@ Every single c/s connection has two sub process, one is for sevice and another i
 command between service and client processing.
 ### 3.1 submodel
 This is the summodel, we implement the function int the model.<br>
-![submodel](https://github.com/qinchao0525/MiniFTP/blob/master/pictures/submodel.jpg)
+![submodel](https://github.com/qinchao0525/MiniFTP/blob/master/pictures/submodel.png)
 <br>P3. summodel</br>
 ### 3.2 string function
 ### 3.3 configuration
@@ -77,9 +77,7 @@ This is the summodel, we implement the function int the model.<br>
 # MiniFTP Written with C++
 Implement in windows with c++.
 ## 1.Frame of sysmodel
-![image](https://github.com/qinchao0525/MiniFTP/blob/master/pictures/2016112162409439.jpg)
 ## 2.Flow chart for C++ programming.
-![image](https://github.com/qinchao0525/MiniFTP/blob/master/pictures/2016112162442621.jpg)<br>
 `NOTE:` reference from http://www.jb51.net/article/96337.htm
 ## 3.Connection
   Connecting with TCP protocol. Server and client will create a socket by themselves. Server<br>
