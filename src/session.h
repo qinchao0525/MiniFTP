@@ -6,6 +6,7 @@ typedef struct session
 	//uid
 	uid_t uid;
 	//control connection.
+	int p_ctrl_fd;
 	int ctrl_fd;
 	//control conn
 	char cmdline[MAX_COMMAND_LINE];//a line of cmd
