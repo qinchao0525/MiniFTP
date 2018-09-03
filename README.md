@@ -93,4 +93,4 @@ use the way that one client with one server with out multi-process.
 `make`<br>
 `sudo ./miniftpd`<br>
 
-Then  you can connect this server by FTP int Linux.
+Then  you can connect this server by FTP in Linux.
