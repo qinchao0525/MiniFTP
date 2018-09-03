@@ -1,5 +1,6 @@
 # MiniFTP
 Declaration:`This project just for learning network programming and use of open source with multi-thread and <br>multi-processing(github).`
+NOTE:`You need Linux to run this Pro.`
 ## 1. Function and Introduction:
 My blog: http://blog.csdn.net/qq_36196684<br>
 <br>
@@ -88,3 +89,8 @@ use the way that one client with one server with out multi-process.
 ## 4.Data format
 
 ## 5.使用方法
+`cd ./src`<br>
+`make`<br>
+`sudo ./miniftpd`<br>
+
+Then  you can connect this server by FTP int Linux.
