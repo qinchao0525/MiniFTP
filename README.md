@@ -1,5 +1,5 @@
 # MiniFTP
-Declaration:`This project just for learning network programming and use of open source with multi-thread and <br>multi-processing(github).`
+Declaration:`This project just for learning network programming and use of open source with multi-thread and multi-processing(github).`<br>
 NOTE:`You need Linux to run this Pro.`
 ## 1. Function and Introduction:
 My blog: http://blog.csdn.net/qq_36196684<br>
