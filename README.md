@@ -93,4 +93,8 @@ use the way that one client with one server with out multi-process.
 `make`<br>
 `sudo ./miniftpd`<br>
 
-Then  you can connect this server by FTP in Linux.
+Then  you can connect this server by FTP in Linux.<br>
+
+You can run and test on your localhost, following the next step.<br>
+>sudo ./miniftpd & <br>
+>ftp 127.0.0.1
